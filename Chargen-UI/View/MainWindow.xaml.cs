@@ -12,17 +12,28 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Chargen_UI.ViewModel;
 
 namespace Chargen_UI
 {
     /// <summary>
-    /// Lógica de interacción para MainWindow.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        MainWindowViewModel _viewModel;
+
         public MainWindow()
         {
             InitializeComponent();
+            _viewModel = new MainWindowViewModel();
+            DataContext = _viewModel;
+        }
+
+        private void ui_section_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _viewModel.setSection(ui_section.SelectedIndex);
         }
     }
 }
