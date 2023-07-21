@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using MakCraft.ViewModels;
+using CharacterMain;
 
 namespace Chargen_UI.ViewModel
 {
@@ -31,7 +32,7 @@ namespace Chargen_UI.ViewModel
 
             _sectionList = new Collection<UserControl>
             {
-                new UserControl(),
+                new CharacterMain.CharacterMainView(),
                 new UserControl()
             };
 

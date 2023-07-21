@@ -1,4 +1,6 @@
 .vs/
-/Chargen-UI/bin/Debug
-/Chargen-UI/obj/Debug
+/Chargen-UI/bin/*
+/Chargen-UI/obj/*
 /packages/MakCraft.MakViewModelBase.5.5.0
+/CharacterMain/obj/*
+/CharacterMain/bin/*
