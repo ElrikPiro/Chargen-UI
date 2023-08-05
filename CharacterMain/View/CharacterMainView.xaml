@@ -25,7 +25,7 @@
         <Label x:Name="CharactersLabel" Content="Characters" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
 
         <!-- A la derecha una lista scrolleable de personajes disponibles -->
-        <ListBox x:Name="CharacterList" Grid.Column="1" Grid.Row="2" ItemsSource="{Binding CharacterList}" SelectedItem="{Binding SelectedCharacter}">
+        <ListBox x:Name="ui_characterList" Grid.Column="1" Grid.Row="2" ItemsSource="{Binding CharacterList, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" SelectedItem="{Binding SelectedCharacter, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" Loaded="CharacterList_Loaded">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
