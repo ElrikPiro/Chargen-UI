@@ -25,22 +25,15 @@
         <Label x:Name="CharactersLabel" Content="Characters" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
 
         <!-- A la derecha una lista scrolleable de personajes disponibles -->
-        <ListBox x:Name="ui_characterList" Grid.Column="1" Grid.Row="2" ItemsSource="{Binding CharacterList, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" SelectedItem="{Binding SelectedCharacter, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" Loaded="CharacterList_Loaded">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Name}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
+        <ListBox x:Name="ui_characterList" Grid.Column="1" Grid.Row="2" ItemsSource="{Binding CharacterList, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" SelectedItem="{Binding SelectedCharacter, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" Loaded="CharacterList_Loaded" SelectionChanged="ui_characterList_SelectionChanged">
         </ListBox>
         
         <!-- Panel de botones abajo del todo -->
         <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button x:Name="CreateCharacterButton" Content="Create" Width="100" Height="30" Margin="10" Command="{Binding CreateCharacterCommand}" IsEnabled="False"/>
-            <Button x:Name="LoadCharacterButton" Content="Load" Width="100" Height="30" Margin="10" Command="{Binding LoadCharacterCommand}" IsEnabled="False"/>
-            <Button x:Name="DeleteCharacterButton" Content="Delete" Width="100" Height="30" Margin="10" Command="{Binding DeleteCharacterCommand}" IsEnabled="False"/>
-            <Button x:Name="ResolveCharacterButton" Content="Resolve" Width="100" Height="30" Margin="10" Command="{Binding ResolveCharacterCommand}" IsEnabled="False"/>
+            <Button x:Name="CreateCharacterButton" Content="Create" Width="100" Height="30" Margin="10" Command="{Binding CreateCharacterCommand}" IsEnabled="{Binding EnableButtons}"/>
+            <Button x:Name="LoadCharacterButton" Content="Load" Width="100" Height="30" Margin="10" Command="{Binding LoadCharacterCommand}" IsEnabled="{Binding EnableButtons}"/>
+            <Button x:Name="DeleteCharacterButton" Content="Delete" Width="100" Height="30" Margin="10" Command="{Binding DeleteCharacterCommand}" IsEnabled="{Binding EnableButtons}"/>
+            <Button x:Name="ResolveCharacterButton" Content="Resolve" Width="100" Height="30" Margin="10" Command="{Binding ResolveCharacterCommand}" IsEnabled="{Binding EnableButtons}"/>
         </StackPanel>
 
     </Grid>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CharacterMain.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -22,34 +23,32 @@ namespace CharacterMain
     /// </summary>
     public partial class CharacterMainView : UserControl
     {
+
+        CharacterMainViewModel viewModel_;
+        
         public CharacterMainView()
         {
             InitializeComponent();
-        }
-
-        async private Task<List<string>> getCharacterList() //TODO: esto al viewmodel
-        {
-            var retval = new List<string>();
-
-            var client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync("http://localhost:8000/getCharacterIds");
-            response.EnsureSuccessStatusCode();
-
-            string responseBody = await response.Content.ReadAsStringAsync();
-
-            if (!string.IsNullOrEmpty(responseBody))
-            {
-                // Convert the JSON response to a list of strings
-                var responseList = JsonSerializer.Deserialize<List<string>>(responseBody);
-                retval = responseList;
-            }
-
-            return retval;
+            viewModel_ = new CharacterMainViewModel();
+            DataContext = viewModel_;
         }
 
         async private void CharacterList_Loaded(object sender, RoutedEventArgs e)
         {
-            await getCharacterList();
+            try
+            {
+                await viewModel_.LoadCharacterList();
+            }
+            catch(Exception ex)
+            {
+                viewModel_.CharacterList = new List<string> { "Error!" };
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void ui_characterList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
