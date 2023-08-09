@@ -46,9 +46,5 @@ namespace CharacterMain
             }
         }
 
-        private void ui_characterList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
     }
 }

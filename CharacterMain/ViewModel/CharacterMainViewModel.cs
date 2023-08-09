@@ -13,6 +13,7 @@ namespace CharacterMain.ViewModel
     {
         private List<string> _characterList;
         private bool _enableButtons;
+        private int _characterIndex;
 
         public List<string> CharacterList 
         {
@@ -22,6 +23,15 @@ namespace CharacterMain.ViewModel
             {
                 SetProperty(ref _characterList, value, "CharacterList");
                 RaisePropertyChanged("CharacterList");
+            }
+        }
+
+        public int SelectedCharacterIndex { 
+            get => _characterIndex; 
+            set
+            {
+                SetProperty(ref _characterIndex, value, nameof(SelectedCharacterIndex));
+                RaisePropertyChanged(nameof(SelectedCharacterIndex));
             }
         }
 
@@ -39,11 +49,14 @@ namespace CharacterMain.ViewModel
         public CharacterMainViewModel()
         {
             _enableButtons = false;
+            _characterIndex = -1;
         }
 
         public async Task LoadCharacterList()
         {
             EnableButtons = false;
+
+            var indexAfterLoading = _characterIndex != -1 ? _characterIndex : -1;
 
             _characterList = new List<string>
             {
@@ -60,6 +73,7 @@ namespace CharacterMain.ViewModel
             if (!string.IsNullOrEmpty(responseBody))
             {
                 CharacterList = JsonSerializer.Deserialize<List<string>>(responseBody);
+                SelectedCharacterIndex = CharacterList.Count >= indexAfterLoading ? indexAfterLoading : -1;
             }
 
             EnableButtons = true;
