@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Expression.Interactivity.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,8 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Text.Json;
 using MakCraft.ViewModels;
+using System.Windows.Input;
+using CharacterMain.Model;
 
 namespace CharacterMain.ViewModel
 {
@@ -77,6 +80,51 @@ namespace CharacterMain.ViewModel
             }
 
             EnableButtons = true;
+        }
+
+        private ActionCommand createCharacterCommand;
+
+        public ICommand CreateCharacterCommand
+        {
+            get
+            {
+                if (createCharacterCommand == null)
+                {
+                    createCharacterCommand = new ActionCommand(CreateCharacter);
+                }
+
+                return createCharacterCommand;
+            }
+        }
+
+        StringContent getEncodedJsonFromCharacter(Character character)
+        {
+            var obj = new
+            {
+                id_ = character.id_,
+                modules = character.modules
+            };
+            var serializedObj = JsonSerializer.Serialize(obj);
+            return new StringContent(serializedObj, Encoding.UTF8, "application/json");
+        }
+
+        string getCurrentTimeString()
+        {
+            return DateTime.Now.ToString("yyyyMMddHHmmss");
+        }
+
+        async private void CreateCharacter()
+        {
+            var client = new HttpClient();
+            var content = getEncodedJsonFromCharacter( new Character(
+                    getCurrentTimeString()
+                )
+            );
+            HttpResponseMessage response = await client.PostAsync("http://localhost:8000/buildCharacter", content);
+            response.EnsureSuccessStatusCode();
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+            await LoadCharacterList();
         }
     }
 }
