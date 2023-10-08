@@ -28,6 +28,7 @@ namespace CharacterMain.ViewModel
             {
                 SetProperty(ref _characterList, value, "CharacterList");
                 RaisePropertyChanged("CharacterList");
+                RaisePropertyChanged(nameof(EnableDeleteButton));
             }
         }
 
@@ -37,6 +38,7 @@ namespace CharacterMain.ViewModel
             {
                 SetProperty(ref _characterIndex, value, nameof(SelectedCharacterIndex));
                 RaisePropertyChanged(nameof(SelectedCharacterIndex));
+                RaisePropertyChanged(nameof(EnableDeleteButton));
             }
         }
 
@@ -47,8 +49,14 @@ namespace CharacterMain.ViewModel
             set
             {
                 SetProperty(ref _enableButtons, value, "EnableButtons");
-                RaisePropertyChanged("EnableButtons");
+                RaisePropertyChanged(nameof(EnableButtons));
+                RaisePropertyChanged(nameof(EnableDeleteButton));
             }
+        }
+
+        public bool EnableDeleteButton
+        {
+            get => _enableButtons && CanDeleteCharacter();
         }
 
         public CharacterMainViewModel(ICharacterDataProvider characterDataProvider)
@@ -111,6 +119,34 @@ namespace CharacterMain.ViewModel
                 return createCharacterCommand;
             }
         }
+
+        private ActionCommand _deleteCharacterCommand;
+        public System.Windows.Input.ICommand DeleteCharacterCommand
+        {
+            get
+            {
+                if (_deleteCharacterCommand == null)
+                {
+                    _deleteCharacterCommand = new ActionCommand(DeleteCharacter);
+                }
+                return _deleteCharacterCommand;
+            }
+        }
+
+        private bool CanDeleteCharacter()
+        {
+            return _characterIndex >= 0 && _characterIndex < _characterList.Count;
+        }
+
+        private async void DeleteCharacter()
+        {
+            if (CanDeleteCharacter())
+            {
+                await Task.Run(() => { _characterDataProvider.DeleteCharacter(_characterList.ElementAt(_characterIndex)); });
+                await LoadCharacterList();
+            }
+        }
+
 
         StringContent getEncodedJsonFromCharacter(Character character)
         {

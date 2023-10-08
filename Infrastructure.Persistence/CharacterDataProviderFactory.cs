@@ -59,6 +59,15 @@ namespace Infrastructure.Persistence
             }
         }
 
+        public void DeleteCharacter(string characterId)
+        {
+            if (!_characterList.Contains(characterId))
+            {
+                throw new Exception("Character does not exist.");
+            }
+            _characterList.Remove(characterId);
+        }
+
     }
 
 }

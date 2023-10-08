@@ -10,5 +10,6 @@ namespace Infrastructure.Persistence.Interfaces
     {
         List<string> LoadCharacterList();
         void CreateCharacter();
+        void DeleteCharacter(string characterId);
     }
 }

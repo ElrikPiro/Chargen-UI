@@ -33,7 +33,7 @@
         <!-- Panel de botones abajo del todo -->
         <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Button x:Name="CreateCharacterButton" Content="Create" Width="100" Height="30" Margin="10" Command="{Binding CreateCharacterCommand}" IsEnabled="{Binding EnableButtons}"/>
-            <Button x:Name="DeleteCharacterButton" Content="Delete" Width="100" Height="30" Margin="10" Command="{Binding DeleteCharacterCommand}" IsEnabled="{Binding EnableButtons}"/>
+            <Button x:Name="DeleteCharacterButton" Content="Delete" Width="100" Height="30" Margin="10" Command="{Binding DeleteCharacterCommand}" IsEnabled="{Binding EnableDeleteButton}"/>
             <Button x:Name="ResolveCharacterButton" Content="Resolve" Width="100" Height="30" Margin="10" Command="{Binding ResolveCharacterCommand}" IsEnabled="{Binding EnableButtons}"/>
         </StackPanel>
 
