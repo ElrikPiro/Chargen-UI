@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using MakCraft.ViewModels;
 using CharacterMain;
+using Infrastructure.Persistence;
 
 namespace Chargen_UI.ViewModel
 {
@@ -30,12 +31,13 @@ namespace Chargen_UI.ViewModel
 
             _selectedSection = new UserControl();
 
+            var cdp = CharacterDataProviderFactory.BuildCharacterDataProvider(CharacterDataProviderType.MOCK_CHARACTER_DATA_PROVIDER);
+
             _sectionList = new Collection<UserControl>
             {
-                new CharacterMain.CharacterMainView(),
+                new CharacterMain.CharacterMainView(cdp),
                 new UserControl()
             };
-
         }
 
         #region Properties

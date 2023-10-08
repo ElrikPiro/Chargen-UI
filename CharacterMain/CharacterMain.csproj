@@ -121,6 +121,11 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Infrastructure.Persistence\Infrastructure.Persistence.csproj">
+      <Project>{45932cb9-4eaf-4d34-bc84-e28bcc0b00af}</Project>
+      <Name>Infrastructure.Persistence</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

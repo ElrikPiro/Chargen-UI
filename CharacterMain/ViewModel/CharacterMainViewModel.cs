@@ -9,6 +9,7 @@ using System.Text.Json;
 using MakCraft.ViewModels;
 using System.Windows.Input;
 using CharacterMain.Model;
+using Infrastructure.Persistence.Interfaces;
 
 namespace CharacterMain.ViewModel
 {
@@ -17,6 +18,7 @@ namespace CharacterMain.ViewModel
         private List<string> _characterList;
         private bool _enableButtons;
         private int _characterIndex;
+        private ICharacterDataProvider _characterDataProvider;
 
         public List<string> CharacterList 
         {
@@ -49,14 +51,16 @@ namespace CharacterMain.ViewModel
             }
         }
 
-        public CharacterMainViewModel()
+        public CharacterMainViewModel(ICharacterDataProvider characterDataProvider)
         {
             _enableButtons = false;
             _characterIndex = -1;
+            _characterDataProvider = characterDataProvider;
         }
 
         public async Task LoadCharacterList()
         {
+
             EnableButtons = false;
 
             var indexAfterLoading = _characterIndex != -1 ? _characterIndex : -1;
@@ -67,19 +71,30 @@ namespace CharacterMain.ViewModel
             };
             CharacterList = _characterList;
 
-            var client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync("http://localhost:8000/getCharacterIds");
-            response.EnsureSuccessStatusCode();
-
-            string responseBody = await response.Content.ReadAsStringAsync();
-
-            if (!string.IsNullOrEmpty(responseBody))
+            try
             {
-                CharacterList = JsonSerializer.Deserialize<List<string>>(responseBody);
+                CharacterList = await Task.Run(_characterDataProvider.LoadCharacterList);
                 SelectedCharacterIndex = CharacterList.Count >= indexAfterLoading ? indexAfterLoading : -1;
             }
+            catch(Exception e)
+            {
+                throw e;
+            }
+            
+            // --- Implementation details that should not be at this level --- 
+            //var client = new HttpClient();
+            //HttpResponseMessage response = await client.GetAsync("http://localhost:8000/getCharacterIds");
+            //response.EnsureSuccessStatusCode();
+
+            //string responseBody = await response.Content.ReadAsStringAsync();
+
+            //if (!string.IsNullOrEmpty(responseBody))
+            //{
+            //    return JsonSerializer.Deserialize<List<string>>(responseBody);
+            //}
 
             EnableButtons = true;
+
         }
 
         private ActionCommand createCharacterCommand;
@@ -115,15 +130,26 @@ namespace CharacterMain.ViewModel
 
         async private void CreateCharacter()
         {
-            var client = new HttpClient();
-            var content = getEncodedJsonFromCharacter( new Character(
-                    getCurrentTimeString()
-                )
-            );
-            HttpResponseMessage response = await client.PostAsync("http://localhost:8000/buildCharacter", content);
-            response.EnsureSuccessStatusCode();
+            // --- Implementation details that should not be at this level --- 
+            //var client = new HttpClient();
+            //var content = getEncodedJsonFromCharacter( new Character(
+            //        getCurrentTimeString()
+            //    )
+            //);
+            //HttpResponseMessage response = await client.PostAsync("http://localhost:8000/buildCharacter", content);
+            //response.EnsureSuccessStatusCode();
 
-            string responseBody = await response.Content.ReadAsStringAsync();
+            //string responseBody = await response.Content.ReadAsStringAsync();
+
+            try
+            {
+                await Task.Run(_characterDataProvider.CreateCharacter);
+            }
+            catch (Exception e)
+            {
+                System.Windows.MessageBox.Show("Couldn't create the character. Cause: " + e.Message);
+            }
+
             await LoadCharacterList();
         }
     }

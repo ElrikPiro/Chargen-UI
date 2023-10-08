@@ -1,4 +1,5 @@
 ﻿using CharacterMain.ViewModel;
+using Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Infrastructure.Persistence.Interfaces;
 
 namespace CharacterMain
 {
@@ -26,10 +28,10 @@ namespace CharacterMain
 
         CharacterMainViewModel viewModel_;
         
-        public CharacterMainView()
+        public CharacterMainView(ICharacterDataProvider characterDataProvider)
         {
             InitializeComponent();
-            viewModel_ = new CharacterMainViewModel();
+            viewModel_ = new CharacterMainViewModel(characterDataProvider);
             DataContext = viewModel_;
         }
 

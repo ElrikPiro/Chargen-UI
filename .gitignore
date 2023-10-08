@@ -5,3 +5,5 @@
 /CharacterMain/obj/*
 /CharacterMain/bin/*
 /packages
+/Infrastructure.Persistence/bin/Debug
+/Infrastructure.Persistence/obj/Debug
