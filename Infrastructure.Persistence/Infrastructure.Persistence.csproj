@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Infrastructure.Persistence</RootNamespace>
     <AssemblyName>Infrastructure.Persistence</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,8 +43,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CharacterDataProviderFactory.cs" />
-    <Compile Include="ICharacterDataProvider.cs" />
+    <Compile Include="MockCharacterProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CharacterMain\CharacterMain.csproj">
+      <Project>{9f852689-93dc-47c7-9c9b-7448605000cd}</Project>
+      <Name>CharacterMain</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

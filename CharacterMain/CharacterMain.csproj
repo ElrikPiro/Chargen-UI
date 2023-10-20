@@ -89,7 +89,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Interfaces\ICharacterDataProvider.cs" />
     <Compile Include="Model\CharacterModel.cs" />
+    <Compile Include="Model\ModuleModel.cs" />
     <Compile Include="ViewModel\CharacterMainViewModel.cs" />
     <Compile Include="View\CharacterMainView.xaml.cs">
       <DependentUpon>CharacterMainView.xaml</DependentUpon>
@@ -121,11 +123,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Infrastructure.Persistence\Infrastructure.Persistence.csproj">
-      <Project>{45932cb9-4eaf-4d34-bc84-e28bcc0b00af}</Project>
-      <Name>Infrastructure.Persistence</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

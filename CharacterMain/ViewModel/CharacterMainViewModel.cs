@@ -19,11 +19,12 @@ namespace CharacterMain.ViewModel
         private bool _enableButtons;
         private int _characterIndex;
         private ICharacterDataProvider _characterDataProvider;
+        Character _characterModel;
 
-        public List<string> CharacterList 
+        public List<string> CharacterList
         {
             get => _characterList;
-            
+
             set
             {
                 SetProperty(ref _characterList, value, "CharacterList");
@@ -32,14 +33,21 @@ namespace CharacterMain.ViewModel
             }
         }
 
-        public int SelectedCharacterIndex { 
-            get => _characterIndex; 
+        public int SelectedCharacterIndex {
+            get => _characterIndex;
             set
             {
                 SetProperty(ref _characterIndex, value, nameof(SelectedCharacterIndex));
+                Task.Run(LoadSelectedCharacter);
                 RaisePropertyChanged(nameof(SelectedCharacterIndex));
                 RaisePropertyChanged(nameof(EnableDeleteButton));
             }
+        }
+
+        private async Task LoadSelectedCharacter()
+        {
+            Dictionary<string, ModuleModel> characterData = await Task.Run(() => { return _characterDataProvider.LoadCharacterModules(CharacterList.ElementAt(_characterIndex)); });
+            _characterModel = new Character(CharacterList.ElementAt(_characterIndex) , characterData);
         }
 
         public bool EnableButtons
@@ -59,11 +67,18 @@ namespace CharacterMain.ViewModel
             get => _enableButtons && CanDeleteCharacter();
         }
 
+        public Dictionary<string, ModuleModel> Modules
+        {
+            get => _characterModel.modules;
+            set => _characterModel.modules = value;
+        }
+
         public CharacterMainViewModel(ICharacterDataProvider characterDataProvider)
         {
             _enableButtons = false;
             _characterIndex = -1;
             _characterDataProvider = characterDataProvider;
+            _characterModel = new Character("");
         }
 
         public async Task LoadCharacterList()
@@ -184,6 +199,35 @@ namespace CharacterMain.ViewModel
             catch (Exception e)
             {
                 System.Windows.MessageBox.Show("Couldn't create the character. Cause: " + e.Message);
+            }
+
+            await LoadCharacterList();
+        }
+
+        private ActionCommand resolveCharacterCommand;
+
+        public ICommand ResolveCharacterCommand
+        {
+            get
+            {
+                if (resolveCharacterCommand == null)
+                {
+                    resolveCharacterCommand = new ActionCommand(ResolveCharacter);
+                }
+
+                return resolveCharacterCommand;
+            }
+        }
+
+        async private void ResolveCharacter()
+        {
+            try
+            {
+                Modules = await Task.Run(() => { return _characterDataProvider.ResolveCharacter(Modules); });
+            }
+            catch (Exception e)
+            {
+                System.Windows.MessageBox.Show("Couldn't resolve the character. Cause: " + e.Message);
             }
 
             await LoadCharacterList();

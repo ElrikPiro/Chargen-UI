@@ -10,12 +10,24 @@ namespace CharacterMain.Model
     public class Character
     {
         public string id_;
-        public Dictionary<string, object> modules;
+        public Dictionary<string, ModuleModel> modules;
 
-        public Character(string id_, Dictionary<string, object> modules = null)
+        public Character(string id_, Dictionary<string, ModuleModel> modules = null)
         {
             this.id_ = id_;
-            this.modules = modules ?? new Dictionary<string, object>();
+            this.modules = modules ?? new Dictionary<string, ModuleModel>();
+        }
+
+        public Character(string id_, Dictionary<string, Dictionary<string, object>> characterData)
+        {
+            this.id_ = id_;
+
+            this.modules = new Dictionary<string, ModuleModel>();
+            foreach (var item in characterData)
+            {
+                this.modules[item.Key] = new ModuleModel(item.Value);
+            }
+
         }
 
         //override public string ToString() 

@@ -32,42 +32,4 @@ namespace Infrastructure.Persistence
 
     }
 
-    public class MockCharacterDataProvider : ICharacterDataProvider
-    {
-        private readonly List<string> _characterList;
-
-        public MockCharacterDataProvider()
-        {
-            _characterList = new List<string>();
-        }
-
-        public List<string> LoadCharacterList()
-        {
-            return _characterList;
-        }
-
-        public void CreateCharacter()
-        {
-            string newCharacter = DateTime.Now.ToString("yyyyMMddHHmmss");
-            if (!_characterList.Contains(newCharacter))
-            {
-                _characterList.Add(newCharacter);
-            }
-            else
-            {
-                throw new Exception("Character already exists.");
-            }
-        }
-
-        public void DeleteCharacter(string characterId)
-        {
-            if (!_characterList.Contains(characterId))
-            {
-                throw new Exception("Character does not exist.");
-            }
-            _characterList.Remove(characterId);
-        }
-
-    }
-
 }
