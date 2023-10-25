@@ -30,9 +30,26 @@
         <ListBox x:Name="ui_characterList" Grid.Column="1" Grid.Row="2" ItemsSource="{Binding CharacterList, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" SelectedIndex="{Binding SelectedCharacterIndex, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" Loaded="CharacterList_Loaded">
         </ListBox>
         
-        <!-- TODO: Un area scrolleable sin borde a la izquierda de la lista, debe tener un botón de add al final del todo que al pulsarlo nos de la opcion de seleccionar un tipo de módulo 
-        cuando se selecciona un módulo, este carga un control custom, que se agrega arriba del todo del area scrolleable, desplazando el botón de añadir hacia abajo... ¿O dejo ya implementados todos los modulos posibles?
+        <!-- TODO: Que se deshabilite cuando no hay un personaje seleccionado
         -->
+        <ScrollViewer Grid.Row="2" Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" BorderThickness="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80*"/>
+                    <ColumnDefinition Width="20*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center">Available Modules</Label>
+                <ComboBox x:Name="ModuleComboBox" Grid.Column="0" Grid.Row="1" Margin="5" ItemsSource="{Binding ModuleList}" SelectedItem="{Binding SelectedModule}"/>
+                <Button x:Name="AddModuleButton" Content="Add" Grid.Column="1" Grid.Row="1" Margin="5" Command="{Binding AddModuleCommand}"/>
+            </Grid>
+        </ScrollViewer>
+        
         
         <!-- Panel de botones abajo del todo -->
         <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
