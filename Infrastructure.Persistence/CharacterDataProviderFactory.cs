@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Infrastructure.Persistence.Interfaces;
+using Domain.Character.Interfaces;
 
 namespace Infrastructure.Persistence
 {

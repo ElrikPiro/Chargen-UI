@@ -8,8 +8,8 @@ using System.Net.Http;
 using System.Text.Json;
 using MakCraft.ViewModels;
 using System.Windows.Input;
-using CharacterMain.Model;
-using Infrastructure.Persistence.Interfaces;
+using Domain.Character;
+using Domain.Character.Interfaces;
 
 namespace CharacterMain.ViewModel
 {
@@ -38,9 +38,12 @@ namespace CharacterMain.ViewModel
             set
             {
                 SetProperty(ref _characterIndex, value, nameof(SelectedCharacterIndex));
-                Task.Run(LoadSelectedCharacter);
-                RaisePropertyChanged(nameof(SelectedCharacterIndex));
-                RaisePropertyChanged(nameof(EnableDeleteButton));
+                if(value >= 0 && value < _characterList.Count)
+                {
+                    Task.Run(LoadSelectedCharacter);
+                    RaisePropertyChanged(nameof(SelectedCharacterIndex));
+                    RaisePropertyChanged(nameof(EnableDeleteButton));
+                }
             }
         }
 
@@ -223,7 +226,7 @@ namespace CharacterMain.ViewModel
         {
             try
             {
-                Modules = await Task.Run(() => { return _characterDataProvider.ResolveCharacter(Modules); });
+                _characterModel = await Task.Run(() => { return _characterDataProvider.ResolveCharacter(_characterModel); });
             }
             catch (Exception e)
             {

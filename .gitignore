@@ -7,3 +7,4 @@
 /packages
 /Infrastructure.Persistence/bin/Debug
 /Infrastructure.Persistence/obj/Debug
+/Domain.Character/obj/Debug

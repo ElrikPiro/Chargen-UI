@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CharacterMain.Model;
+using Domain.Character;
 
-namespace Infrastructure.Persistence.Interfaces
+namespace Domain.Character.Interfaces
 {
     public interface ICharacterDataProvider
     {
@@ -13,6 +13,6 @@ namespace Infrastructure.Persistence.Interfaces
         void CreateCharacter();
         void DeleteCharacter(string characterId);
         Dictionary<string, ModuleModel> LoadCharacterModules(string characterIndex);
-        Dictionary<string, ModuleModel> ResolveCharacter(Dictionary<string, ModuleModel> modules);
+        Character ResolveCharacter(Character modules);
     }
 }

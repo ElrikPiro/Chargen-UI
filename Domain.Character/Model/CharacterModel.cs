@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CharacterMain.Model
+namespace Domain.Character
 {
     public class Character
     {
@@ -16,18 +16,6 @@ namespace CharacterMain.Model
         {
             this.id_ = id_;
             this.modules = modules ?? new Dictionary<string, ModuleModel>();
-        }
-
-        public Character(string id_, Dictionary<string, Dictionary<string, object>> characterData)
-        {
-            this.id_ = id_;
-
-            this.modules = new Dictionary<string, ModuleModel>();
-            foreach (var item in characterData)
-            {
-                this.modules[item.Key] = new ModuleModel(item.Value);
-            }
-
         }
 
         //override public string ToString() 

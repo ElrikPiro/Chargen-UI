@@ -141,6 +141,10 @@
       <Project>{9f852689-93dc-47c7-9c9b-7448605000cd}</Project>
       <Name>CharacterMain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Domain.Character\Domain.Character.csproj">
+      <Project>{dcba3a8a-9675-42db-9269-57d79967f6de}</Project>
+      <Name>Domain.Character</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Infrastructure.Persistence\Infrastructure.Persistence.csproj">
       <Project>{45932cb9-4eaf-4d34-bc84-e28bcc0b00af}</Project>
       <Name>Infrastructure.Persistence</Name>

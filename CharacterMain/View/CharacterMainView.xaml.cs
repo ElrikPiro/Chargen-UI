@@ -1,5 +1,5 @@
 ﻿using CharacterMain.ViewModel;
-using Infrastructure.Persistence;
+using Domain.Character.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Infrastructure.Persistence.Interfaces;
 
 namespace CharacterMain
 {
