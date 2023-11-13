@@ -9,17 +9,15 @@ namespace Domain.Character
     public class ModuleModel
     {
         Dictionary<string, object> moduleConfig;
-        bool resolved;
         
         public ModuleModel(Dictionary<string, object> moduleConfig)
         {
             this.moduleConfig = moduleConfig ?? new Dictionary<string, object>();
-            resolved = moduleConfig.ContainsKey("resolved") && (moduleConfig["resolved"] == null ? false : (bool) moduleConfig["resolved"]);
         }
 
         public bool IsResolved
         {
-            get => resolved;
+            get => moduleConfig.ContainsKey("resolved") && (moduleConfig["resolved"] == null ? false : (bool)moduleConfig["resolved"]);
             set
             {
                 moduleConfig["resolved"] = value;

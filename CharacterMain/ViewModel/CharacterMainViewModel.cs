@@ -10,6 +10,8 @@ using MakCraft.ViewModels;
 using System.Windows.Input;
 using Domain.Character;
 using Domain.Character.Interfaces;
+using System.Windows;
+using Domain.Character.Factories;
 
 namespace CharacterMain.ViewModel
 {
@@ -20,6 +22,47 @@ namespace CharacterMain.ViewModel
         private int _characterIndex;
         private ICharacterDataProvider _characterDataProvider;
         Character _characterModel;
+        private System.Collections.ObjectModel.ObservableCollection<string> _allModuleList;
+        private string _selectedModule;
+        private Dictionary<string, ModuleModel> _activeModules;
+        private System.Windows.Visibility _inputNameModuleVisibility;
+
+        public System.Windows.Visibility InputNameModuleVisibility 
+        { 
+            get
+            {
+                return HasModule(ModuleIndexes.InputName.ToString()) ? Visibility.Visible : Visibility.Collapsed;
+            }
+            
+        }
+
+        public CharacterMainViewModel(ICharacterDataProvider characterDataProvider)
+        {
+            _enableButtons = false;
+            _characterIndex = 0;
+            _characterDataProvider = characterDataProvider;
+            _characterModel = new Character("");
+            _inputNameModuleVisibility = System.Windows.Visibility.Collapsed;
+            _allModuleList = new System.Collections.ObjectModel.ObservableCollection<string>(ModuleFactory.ModuleNames.Keys);
+            _selectedModule = _allModuleList.First();
+        }
+
+        public string SelectedModule { 
+            get => _selectedModule; 
+            set => SetProperty(ref _selectedModule, value); 
+        }
+
+        public System.Collections.ObjectModel.ObservableCollection<string> ModuleList {
+            get {
+                return _allModuleList;
+            }
+        }
+
+        public bool IsCharacterLoaded { 
+            
+            get => _characterIndex >= 0;
+        
+        }
 
         public List<string> CharacterList
         {
@@ -44,13 +87,15 @@ namespace CharacterMain.ViewModel
                     RaisePropertyChanged(nameof(SelectedCharacterIndex));
                     RaisePropertyChanged(nameof(EnableDeleteButton));
                 }
+                RaisePropertyChanged(nameof(IsCharacterLoaded));
             }
         }
 
         private async Task LoadSelectedCharacter()
         {
             Dictionary<string, ModuleModel> characterData = await Task.Run(() => { return _characterDataProvider.LoadCharacterModules(CharacterList.ElementAt(_characterIndex)); });
-            _characterModel = new Character(CharacterList.ElementAt(_characterIndex) , characterData);
+            _characterModel = new Character(CharacterList.ElementAt(_characterIndex), characterData);
+            RefreshProperties();
         }
 
         public bool EnableButtons
@@ -73,15 +118,11 @@ namespace CharacterMain.ViewModel
         public Dictionary<string, ModuleModel> Modules
         {
             get => _characterModel.modules;
-            set => _characterModel.modules = value;
-        }
-
-        public CharacterMainViewModel(ICharacterDataProvider characterDataProvider)
-        {
-            _enableButtons = false;
-            _characterIndex = -1;
-            _characterDataProvider = characterDataProvider;
-            _characterModel = new Character("");
+            set
+            {
+                _characterModel.modules = value;
+                RefreshProperties();
+            }
         }
 
         public async Task LoadCharacterList()
@@ -100,7 +141,7 @@ namespace CharacterMain.ViewModel
             try
             {
                 CharacterList = await Task.Run(_characterDataProvider.LoadCharacterList);
-                SelectedCharacterIndex = CharacterList.Count >= indexAfterLoading ? indexAfterLoading : -1;
+                SelectedCharacterIndex = CharacterList.Count > indexAfterLoading ? indexAfterLoading : -1;
             }
             catch(Exception e)
             {
@@ -120,6 +161,7 @@ namespace CharacterMain.ViewModel
             //}
 
             EnableButtons = true;
+            RefreshProperties();
 
         }
 
@@ -235,5 +277,75 @@ namespace CharacterMain.ViewModel
 
             await LoadCharacterList();
         }
+
+        private ActionCommand addModuleCommand;
+
+        public ICommand AddModuleCommand
+        {
+            get
+            {
+                if (addModuleCommand == null)
+                {
+                    addModuleCommand = new ActionCommand(AddSelectedModule);
+                }
+
+                return addModuleCommand;
+            }
+        }
+
+        private void AddSelectedModule()
+        {
+            addModule(SelectedModule);
+            RefreshProperties();
+        }
+
+        private void addModule(string ModuleName)
+        {
+            if(HasModule(ModuleName))
+            {
+                System.Windows.MessageBox.Show("Current character already has this module");
+            }
+            else
+            {
+                _characterModel.modules[ModuleName] = ModuleFactory.GetDefaultModule(ModuleName);
+            }
+        }
+
+        private bool HasModule(string moduleName)
+        {
+            return _characterModel.modules.Keys.Contains(moduleName);
+        }
+
+        private void RefreshProperties()
+        {
+            RaisePropertyChanged(nameof(InputNameModuleVisibility));
+            RaisePropertyChanged(nameof(InputNameModuleValue));
+            RaisePropertyChanged(nameof(InputNameModuleUnresolved));
+        }
+
+        public string InputNameModuleValue {
+            get
+            {
+                try
+                {
+                    return _characterModel.modules[ModuleIndexes.InputName.ToString()].ModuleConfig["name"] as string;
+                }
+                catch(Exception e)
+                {
+                    return string.Empty;
+                }
+            }
+            set 
+            {
+                _characterModel.modules[ModuleIndexes.InputName.ToString()].ModuleConfig["name"] = value;
+                RaisePropertyChanged(nameof(InputNameModuleValue));
+            }
+        }
+
+        public bool InputNameModuleUnresolved 
+        { 
+            get => _characterModel.modules.ContainsKey(ModuleIndexes.InputName.ToString()) && !_characterModel.modules[ModuleIndexes.InputName.ToString()].IsResolved; 
+        }
+
     }
 }

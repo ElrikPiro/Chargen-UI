@@ -47,8 +47,7 @@ namespace Infrastructure.Persistence
 
         public Character ResolveCharacter(Character character)
         {
-            character.modules["MockModule"] = MockModuleResolver.ResolveMockModule(character.modules["MockModule"]);
-            return character;
+            return MockModuleResolver.ResolveModules(character);
         }
 
         public Dictionary<string, ModuleModel> GenerateNewCharacterModules()
@@ -79,10 +78,22 @@ namespace Infrastructure.Persistence
     static class MockModuleResolver
     {
 
-        public static ModuleModel ResolveMockModule(ModuleModel module)
+        private static ModuleModel ResolveMockModule(ModuleModel module)
         {
             module.IsResolved = true;
             return module;
+        }
+
+        private static void ResolveInputNameModule(Character character)
+        {
+            character.modules["InputName"].IsResolved = true;
+        }
+
+        public static Character ResolveModules(Character character)
+        {
+            character.modules["MockModule"] = MockModuleResolver.ResolveMockModule(character.modules["MockModule"]);
+            MockModuleResolver.ResolveInputNameModule(character);
+            return character;
         }
 
     }

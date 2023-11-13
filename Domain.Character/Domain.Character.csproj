@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factories\ModuleFactory.cs" />
     <Compile Include="Interfaces\ICharacterDataProvider.cs" />
     <Compile Include="Model\CharacterModel.cs" />
     <Compile Include="Model\ModuleModel.cs" />
