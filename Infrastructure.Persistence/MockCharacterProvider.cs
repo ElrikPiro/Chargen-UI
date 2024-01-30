@@ -5,6 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Character;
+using System.Collections;
+using Application.Modules.Factories;
+using Application.Modules.Interfaces;
 
 namespace Infrastructure.Persistence
 {
@@ -78,21 +81,72 @@ namespace Infrastructure.Persistence
     static class MockModuleResolver
     {
 
-        private static ModuleModel ResolveMockModule(ModuleModel module)
+        private static void ResolveModule(Character character, string moduleName)
         {
-            module.IsResolved = true;
-            return module;
-        }
+            if (!character.modules[moduleName].IsResolved)
+            {
+                //has dependencies?
+                if (character.modules[moduleName].ModuleConfig.ContainsKey("dependencies") || character.modules[moduleName].GetDependencies().Count > 0)
+                {
+                    List<string> unsolvedDependencies = new List<string>();
+                    
+                    //resolve dependencies
+                    foreach (string dependency in character.modules[moduleName].GetDependencies())
+                    {
+                        if(character.modules.ContainsKey(dependency))
+                        {
+                            ResolveModule(character, dependency);
+                            if (character.modules[dependency].ModuleConfig.ContainsKey("export"))
+                            {
+                                character.modules[moduleName].SetDependency(
+                                    dependency, 
+                                    character.modules[dependency].ModuleConfig["export"] as string
+                                );
+                            }
+                        }
+                        else
+                        {
+                            unsolvedDependencies.Add(dependency);
+                        }
+                    }
 
-        private static void ResolveInputNameModule(Character character)
-        {
-            character.modules["InputName"].IsResolved = true;
+                    if(unsolvedDependencies.Count > 0)
+                    {
+                        throw new Exception("Unmet module dependencies: " + string.Join(", ", unsolvedDependencies));
+                    }
+                }
+
+                //resolution
+                if(moduleName.Equals(ModuleIndexes.CulturalName.ToString()))
+                {
+                    string INPUT_NAME_MODULE = ModuleIndexes.InputName.ToString();
+
+                    var cultureModule = character.modules[ModuleIndexes.Culture.ToString()] as ICultureModule;
+                    var generatedName = cultureModule.GenerateCulturalName();
+                    var inputNameModule = ModuleFactory.GetDefaultModule(INPUT_NAME_MODULE);
+
+                    inputNameModule.ModuleConfig["name"] = generatedName;
+                    character.modules[INPUT_NAME_MODULE] = inputNameModule;
+                    ResolveModule(character, INPUT_NAME_MODULE);
+                    character.modules[moduleName].ModuleConfig["export"] = generatedName;
+                }
+                
+                character.modules[moduleName].IsResolved = true;
+                
+            }
         }
 
         public static Character ResolveModules(Character character)
         {
-            character.modules["MockModule"] = MockModuleResolver.ResolveMockModule(character.modules["MockModule"]);
-            MockModuleResolver.ResolveInputNameModule(character);
+            //TODO: Implementar la resolución de submódulos bien.
+
+            var cachedCollection = character.modules.Keys.ToArray();
+
+            foreach(string moduleName in cachedCollection)
+            {
+                ResolveModule(character, moduleName);
+            }
+
             return character;
         }
 

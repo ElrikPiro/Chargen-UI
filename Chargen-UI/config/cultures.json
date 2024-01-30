@@ -1,0 +1,19 @@
+{
+	"Cultures": {
+		"mockup": {
+		"AttributeModuleDependencies": ["GenderModule"],
+		"CulturalNamesByAttribute": {
+			"Male": ["Alexander", "Bob", "Charlie"],
+			"Female": ["Alice", "Barbara", "Carrie"]
+			}
+		},
+		"mockup2": {
+			"AttributeModuleDependencies": ["GenderModule"],
+			"CulturalNamesByAttribute": {
+				"Male": ["Alexander", "Bob", "Charlie"],
+				"Female": ["Alice", "Barbara", "Carrie"],
+				"Nonbinary": ["Alex", "Ritsuka"]
+			}
+		}
+	}
+}

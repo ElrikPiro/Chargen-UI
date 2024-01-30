@@ -121,6 +121,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Application.Modules\Application.Modules.csproj">
+      <Project>{6dd78b6b-9fc6-4ed4-8a02-3dd76ee03b69}</Project>
+      <Name>Application.Modules</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Domain.Character\Domain.Character.csproj">
       <Project>{dcba3a8a-9675-42db-9269-57d79967f6de}</Project>
       <Name>Domain.Character</Name>

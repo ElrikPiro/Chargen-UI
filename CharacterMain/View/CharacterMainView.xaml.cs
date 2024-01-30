@@ -46,6 +46,5 @@ namespace CharacterMain
                 MessageBox.Show(ex.Message);
             }
         }
-
     }
 }

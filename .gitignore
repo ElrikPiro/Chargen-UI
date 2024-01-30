@@ -8,3 +8,7 @@
 /Infrastructure.Persistence/bin/Debug
 /Infrastructure.Persistence/obj/Debug
 /Domain.Character/obj/Debug
+/Application.Modules/obj/Debug
+/Domain.Character/bin/Debug/Domain.Character.dll
+/Domain.Character/bin/Debug/Domain.Character.pdb
+/Application.Modules/bin/Debug

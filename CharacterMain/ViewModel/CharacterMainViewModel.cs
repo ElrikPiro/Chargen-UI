@@ -11,7 +11,8 @@ using System.Windows.Input;
 using Domain.Character;
 using Domain.Character.Interfaces;
 using System.Windows;
-using Domain.Character.Factories;
+using Application.Modules.Factories;
+using System.Collections.ObjectModel;
 
 namespace CharacterMain.ViewModel
 {
@@ -34,6 +35,15 @@ namespace CharacterMain.ViewModel
                 return HasModule(ModuleIndexes.InputName.ToString()) ? Visibility.Visible : Visibility.Collapsed;
             }
             
+        }
+
+        public System.Windows.Visibility GenderModuleVisibility
+        {
+            get
+            {
+                return HasModule(ModuleIndexes.GenderModule.ToString()) ? Visibility.Visible : Visibility.Collapsed;
+            }
+
         }
 
         public CharacterMainViewModel(ICharacterDataProvider characterDataProvider)
@@ -321,6 +331,8 @@ namespace CharacterMain.ViewModel
             RaisePropertyChanged(nameof(InputNameModuleVisibility));
             RaisePropertyChanged(nameof(InputNameModuleValue));
             RaisePropertyChanged(nameof(InputNameModuleUnresolved));
+            RaisePropertyChanged(nameof(GenderModuleVisibility));
+            RaisePropertyChanged(nameof(GenderModuleValue));
         }
 
         public string InputNameModuleValue {
@@ -342,9 +354,39 @@ namespace CharacterMain.ViewModel
             }
         }
 
+        public string GenderModuleValue
+        {
+
+            get
+            {
+                try
+                {
+                    return _characterModel.modules[ModuleIndexes.GenderModule.ToString()].ModuleConfig["gender"] as string;
+                }
+                catch (Exception e)
+                {
+                    return string.Empty;
+                }
+            }
+
+            set
+            {
+                _characterModel.modules[ModuleIndexes.GenderModule.ToString()].ModuleConfig["gender"] = value;
+                _characterModel.modules[ModuleIndexes.GenderModule.ToString()].ModuleConfig["export"] = value;
+                RaisePropertyChanged(nameof(GenderModuleValue));
+            }
+        }
+
         public bool InputNameModuleUnresolved 
         { 
             get => _characterModel.modules.ContainsKey(ModuleIndexes.InputName.ToString()) && !_characterModel.modules[ModuleIndexes.InputName.ToString()].IsResolved; 
+        }
+
+        public ObservableCollection<string> GenderModuleOptions { 
+            get
+            {
+                return new ObservableCollection<string> { "Male", "Female" };
+            } 
         }
 
     }
